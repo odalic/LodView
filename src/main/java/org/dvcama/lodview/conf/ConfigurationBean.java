@@ -355,4 +355,8 @@ public class ConfigurationBean implements ServletContextAware, Cloneable {
     this.endPointUrl = sparql;
   }
 
+  public void setPublicUrlPrefix(String prefix) {
+    this.publicUrlPrefix = prefix; 
+  }
+
 }

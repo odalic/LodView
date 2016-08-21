@@ -81,7 +81,13 @@ public class UniversalResourceController {
 	}
 
 	public Object resource(ConfigurationBean conf, ModelMap model, HttpServletRequest req, HttpServletResponse res, Locale locale, String output, String forceIRI, String sparql, String prefix, String colorPair) throws UnsupportedEncodingException {
-	    conf.setEndpointUrl(sparql);
+  	    if (sparql != null) {  
+  	      conf.setEndpointUrl(sparql);
+  	    }
+  	  
+  	    if (prefix != null) {
+  	      conf.setPublicUrlPrefix(prefix);
+  	    }
 	  
 	    model.addAttribute("conf", conf);
 
