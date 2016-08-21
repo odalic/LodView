@@ -17,6 +17,7 @@ local.properties
 .loadpath
 .springBeans
 target/
+.factorypath
 
 # External tool builders
 .externalToolBuilders/

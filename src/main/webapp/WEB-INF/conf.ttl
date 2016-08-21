@@ -75,7 +75,7 @@
 ##	to the HTML representation of the resources, live it blank if you want to 
 ##  use the "pure content negotiation mode", WARNING use suffix OR prefix, not both
 	
-	conf:httpRedirectSuffix ".html"; ## or eg. ".html";
+	##conf:httpRedirectSuffix ".html"; ## or eg. ".html";
 	##conf:httpRedirectPrefix "/page/"; ## or eg. "";
 
 	##conf:httpRedirectExcludeList ""; 	## a comma separeted list of regex to match which resources will use "pure content negotiation mode"

@@ -34,7 +34,7 @@ public class StaticController {
 		this.messageSource = messageSource;
 	}
 
-	@RequestMapping(value = "/")
+	@RequestMapping(value = "/home")
 	public String home(HttpServletRequest req, HttpServletResponse res, Model model, Locale locale, @CookieValue(value = "colorPair", defaultValue = "") String colorPair) {
 		colorPair = conf.getRandomColorPair();
 		Cookie c = new Cookie("colorPair", colorPair);
