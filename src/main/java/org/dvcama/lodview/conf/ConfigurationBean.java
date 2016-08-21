@@ -351,4 +351,8 @@ public class ConfigurationBean implements ServletContextAware, Cloneable {
 		this.confFile = confFile;
 	}
 
+  public void setEndpointUrl(String sparql) {
+    this.endPointUrl = sparql;
+  }
+
 }

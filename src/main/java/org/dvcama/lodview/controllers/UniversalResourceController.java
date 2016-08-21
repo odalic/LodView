@@ -3,7 +3,6 @@ package org.dvcama.lodview.controllers;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 @Controller
 @RequestMapping(value = "/")
-public class ResourceController {
+public class UniversalResourceController {
 	@Autowired
 	private MessageSource messageSource;
 
@@ -61,29 +60,30 @@ public class ResourceController {
 
 	final AcceptList offeringResources = new AcceptList("text/html, application/xhtml+xml");
 
-	public ResourceController() {
+	public UniversalResourceController() {
 
 	}
 
-	public ResourceController(MessageSource messageSource, OntologyBean ontoBean) {
+	public UniversalResourceController(MessageSource messageSource, OntologyBean ontoBean) {
 		this.messageSource = messageSource;
 		this.ontoBean = ontoBean;
 	}
 
-	@RequestMapping(value = { "{path:(?!staticResources).*$}", "{path:(?!staticResources).*$}/**" })
-	public Object resourceController(ModelMap model, HttpServletRequest req, HttpServletResponse res, Locale locale, @RequestParam(value = "output", defaultValue = "") String output, @CookieValue(value = "colorPair", defaultValue = "") String colorPair) throws UnsupportedEncodingException {
+	@RequestMapping(value = { "/" })
+    public Object resourceController(ModelMap model, HttpServletRequest req, HttpServletResponse res, Locale locale, @RequestParam(value = "output", defaultValue = "") String output, @CookieValue(value = "colorPair", defaultValue = "") String colorPair, @RequestParam(value = "IRI") String iri, @RequestParam(value = "sparql", defaultValue = "") String sparql, @RequestParam(value = "prefix", defaultValue = "") String prefix) throws UnsupportedEncodingException {
 		if (colorPair.equals("")) {
 			colorPair = conf.getRandomColorPair();
 			Cookie c = new Cookie("colorPair", colorPair);
 			c.setPath("/");
 			res.addCookie(c);
 		}
-		return resource(conf, model, req, res, locale, output, "", colorPair);
+		return resource(conf, model, req, res, locale, output, iri, sparql, prefix, colorPair);
 	}
 
-	public Object resource(ConfigurationBean conf, ModelMap model, HttpServletRequest req, HttpServletResponse res, Locale locale, String output, String forceIRI, String colorPair) throws UnsupportedEncodingException {
-
-		model.addAttribute("conf", conf);
+	public Object resource(ConfigurationBean conf, ModelMap model, HttpServletRequest req, HttpServletResponse res, Locale locale, String output, String forceIRI, String sparql, String prefix, String colorPair) throws UnsupportedEncodingException {
+	    conf.setEndpointUrl(sparql);
+	  
+	    model.addAttribute("conf", conf);
 
 		String IRIsuffix = new UrlPathHelper().getLookupPathForRequest(req).replaceAll("/lodview/", "/");
 		String requestUrl = req.getRequestURI();
@@ -227,7 +227,7 @@ public class ResourceController {
 					return new ErrorController(conf).error406(res, model, colorPair);
 				}
 			} else {
-				return resourceRaw(conf, model, IRI, conf.getEndPointUrl(), matchItem.getContentType());
+				return resourceRaw(conf, model, IRI, sparql, matchItem.getContentType());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -365,7 +365,7 @@ public class ResourceController {
 		}
 	}
 
-	@RequestMapping(value = "/rawdata")
+	//@RequestMapping(value = "/rawdata")
 	public ResponseEntity<String> resourceRawController(ModelMap model, @RequestParam(value = "IRI") String IRI, @RequestParam(value = "sparql") String sparql, @RequestParam(value = "contentType", defaultValue = "application/rdf+xml") String contentType) {
 		return resourceRaw(conf, model, IRI, sparql, contentType);
 	}
